@@ -6,7 +6,7 @@ class Sql {
     const sql = Buffer.from(data.sql, "base64").toString();
     const params = data.params;
     try {
-      return db.any(sql, params);
+      return await db.any(sql, params);
     } catch (e) {
       return e.stack;
     }
