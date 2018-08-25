@@ -31,6 +31,10 @@ class Bookmarks {
   }
 
   async remove(id, params) {
+    if (params.query.all) {
+      return db.manyOrNone("delete from bookmarks where id > -1 returning *");
+    }
+
     return db.oneOrNone("delete from bookmarks where id = $1 returning *", [
       id
     ]);
