@@ -22,7 +22,8 @@ app.hooks({
     all: [
       async function(context) {
         console.log("before hooks");
-        console.log(context);
+        console.log(context.headers);
+        console.log(context.params.headers);
       }
     ]
   }
