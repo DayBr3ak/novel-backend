@@ -23,7 +23,7 @@ app.configure(services);
 // Configure a middleware for 404s and the error handler
 // app.use(express.notFound());
 
-const port = 80;
+const port = process.env.PORT;
 const server = app.listen(port);
 
 process.on("unhandledRejection", (reason, p) =>
