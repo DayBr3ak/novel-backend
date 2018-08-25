@@ -38,7 +38,7 @@ const BOOKMARKS = [
 ];
 
 async function createBookmarks() {
-  const s = await bookmarksService.create(BOOKMARKS);
+  const s = await bookmarksService.create(BOOKMARKS[0]);
   console.log(s);
 }
 

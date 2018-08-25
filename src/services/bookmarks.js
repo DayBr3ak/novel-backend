@@ -14,7 +14,10 @@ class Bookmarks {
 
   async create(data, params) {
     console.log(data);
-    return db.one("insert into bookmarks(info) values($1) returning *", [data]);
+    return db.one("insert into bookmarks($1:name) values($2) returning *", [
+      Object.keys(data),
+      Object.values(data)
+    ]);
   }
 
   async get(id, params) {
