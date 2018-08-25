@@ -12,15 +12,18 @@ class Bookmarks {
     return db.manyOrNone("select * from bookmarks");
   }
 
-  async create(data, params) {
-    if (data instanceof Array && data.length) {
-      data = datat[0];
-    }
-    console.log(data);
+  _create(data) {
     return db.one("insert into bookmarks($1:name) values($2:csv) returning *", [
       Object.keys(data),
       data
     ]);
+  }
+
+  async create(data, params) {
+    if (data instanceof Array && data.length) {
+      return Promise.all(data.map(this._create.bind(this)));
+    }
+    return this._create(data);
   }
 
   async get(id, params) {
