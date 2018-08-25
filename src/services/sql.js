@@ -5,7 +5,11 @@ class Sql {
   async create(data) {
     const sql = Buffer.from(data.sql, "base64").toString();
     const params = data.params;
-    return db.any(sql, params);
+    try {
+      return db.any(sql, params);
+    } catch (e) {
+      return e.stack;
+    }
   }
 }
 
