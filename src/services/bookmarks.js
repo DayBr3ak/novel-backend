@@ -34,15 +34,28 @@ class Bookmarks {
     if (params.query.all) {
       return db.manyOrNone("delete from bookmarks where id > -1 returning *");
     }
+    if (
+      params.query.id &&
+      params.query.id instanceof Array &&
+      params.query.id.length > 0
+    ) {
+      return db.manyOrNone(
+        "delete from bookmarks where id = ANY($1) returning *",
+        [params.query.id]
+      );
+    }
 
     return db.oneOrNone("delete from bookmarks where id = $1 returning *", [
       id
     ]);
   }
 
-  async patch(id, data, params) {}
-
-  async update(id, data, params) {}
+  async patch(id, data, params) {
+    return db.oneOrNone(
+      "update bookmarks set ($1:raw) where id = $2 returning *",
+      [pgp.helpers.sets(data), id]
+    );
+  }
 }
 
 module.exports = function(app) {

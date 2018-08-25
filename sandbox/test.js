@@ -39,22 +39,38 @@ const BOOKMARKS = [
 
 async function createBookmarks() {
   const s = await bookmarksService.create(BOOKMARKS);
-  console.log(s);
 }
 
 async function cleanup() {
-  const bookmarks = await bookmarksService.find();
-  for (const b of bookmarks) {
-    const s = await bookmarksService.remove(b.id);
-    console.log("removed", s);
-  }
+  // const bookmarks = await bookmarksService.find();
+  // for (const b of bookmarks) {
+  //   const s = await bookmarksService.remove(b.id);
+  //   console.log("removed", s);
+  // }
+
+  const s = await bookmarksService.remove(0, {
+    query: {
+      all: true
+    }
+  });
 }
 
 async function run() {
   await createBookmarks();
   const bookmarks = await bookmarksService.find();
   console.log(bookmarks);
-  // await cleanup();
+  await cleanup();
 }
 
-run().catch(console.error);
+async function testPatch() {
+  await cleanup();
+  const s = await bookmarksService.create({
+    name: "patch fail"
+  });
+  const e = await bookmarksService.patch(s.id, {
+    name: "patch ok"
+  });
+  console.log(e);
+}
+
+testPatch().catch(console.error);
