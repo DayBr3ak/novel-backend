@@ -66,7 +66,8 @@ async function run() {
 async function testPatch() {
   await cleanup();
   const s = await bookmarksService.create({
-    name: "patch fail"
+    name: "patch fail",
+    reference: "ok"
   });
   const e = await bookmarksService.patch(s.id, {
     name: "patch ok"
