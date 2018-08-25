@@ -9,17 +9,18 @@ fs.writeFileSync(global.dirname + "/data/1.json", JSON.stringify(data));
 
 class Bookmarks {
   async find(params) {
-    const s = fs.readFileSync(global.dirname + "/data/1.json", "utf8");
-    await db.none(`
-    create table bookmarks (
-      id serial primary key
-      , name text not null
-    )
-    `);
-    return JSON.parse(s);
-    return {
-      hello: "world"
-    };
+    // const s = fs.readFileSync(global.dirname + "/data/1.json", "utf8");
+    // await db.none(`
+    // create table bookmarks (
+    //   id serial primary key
+    //   , name text not null
+    // )
+    // `);
+    // return JSON.parse(s);
+    // return {
+    //   hello: "world"
+    // };
+    await db.manyOrNone("select * from bookmarks");
   }
 }
 
