@@ -3,7 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const feathers = require("@feathersjs/feathers");
 const express = require("@feathersjs/express");
-const services = require("./src/services");
+const services = require("./services");
 
 const app = express(feathers());
 app.use(cors());
