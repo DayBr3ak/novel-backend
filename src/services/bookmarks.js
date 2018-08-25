@@ -13,10 +13,13 @@ class Bookmarks {
   }
 
   async create(data, params) {
+    if (data instanceof Array && data.length) {
+      data = datat[0];
+    }
     console.log(data);
-    return db.one("insert into bookmarks($1:name) values($2) returning *", [
+    return db.one("insert into bookmarks($1:name) values($2:csv) returning *", [
       Object.keys(data),
-      Object.values(data)
+      data
     ]);
   }
 
