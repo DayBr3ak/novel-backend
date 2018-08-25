@@ -14,7 +14,7 @@ class Bookmarks {
 
   async create(data, params) {
     return db.one(
-      "insert into bookmarks ($1:name) values ($1:csv) returning *",
+      "insert into bookmarks ($1:value) values ($1:csv) returning *",
       [data]
     );
   }

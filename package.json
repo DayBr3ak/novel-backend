@@ -23,7 +23,6 @@
   "dependencies": {
     "@feathersjs/express": "^1.2.3",
     "@feathersjs/feathers": "^3.1.7",
-    "axios": "^0.18.0",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
     "helmet": "^3.13.0",
