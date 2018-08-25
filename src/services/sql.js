@@ -6,7 +6,11 @@ class Sql {
     const sql = Buffer.from(data.sql, "base64").toString();
     const params = data.params;
     try {
-      return await db.any(sql, params);
+      const val = await db.any(sql, params);
+      if (val === undefined) {
+        return "result is undefined";
+      }
+      return val;
     } catch (e) {
       return {
         code: e.code,
