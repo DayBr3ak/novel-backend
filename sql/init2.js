@@ -13,7 +13,7 @@ const sql = fs.readFileSync(__dirname + "/bookmarks.sql");
 
 async function run() {
   const x = await db.any(sql);
-  // console.log(x);
+  console.log(x);
 }
 
 run().catch(console.error);

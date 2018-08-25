@@ -57,7 +57,10 @@ async function testPatch() {
   await cleanup();
   const s = await bookmarksService.create({
     name: "patch fail",
-    reference: "ok"
+    reference: "ok",
+    slug: "/prout",
+    chapter: "1",
+    website: "wuxiaco"
   });
   const e = await bookmarksService.patch(s.id, {
     name: "patch ok"

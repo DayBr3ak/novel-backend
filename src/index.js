@@ -17,6 +17,16 @@ app.use(express.urlencoded({ extended: true }));
 app.configure(express.rest());
 
 app.configure(services);
+app.hooks({
+  before: {
+    all: [
+      async function(context) {
+        console.log("before hooks");
+        console.log(context.params);
+      }
+    ]
+  }
+});
 
 // Configure a middleware for 404s and the error handler
 // app.use(express.notFound());
