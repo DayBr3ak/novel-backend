@@ -1,6 +1,7 @@
 const feathers = require("@feathersjs/feathers");
 const rest = require("@feathersjs/rest-client");
 const axios = require("axios");
+const assert = require("assert");
 
 const app = feathers();
 
@@ -70,7 +71,8 @@ async function testPatch() {
   const e = await bookmarksService.patch(s.id, {
     name: "patch ok"
   });
-  console.log(e);
+  assert.equal(s.id, e.id);
+  assert.equal(e.name, "patch ok");
 }
 
 testPatch().catch(console.error);

@@ -30,5 +30,6 @@
   },
   "devDependencies": {
     "dotenv": "^6.0.0"
-  }
+  },
+  "db_version": "2"
 }
