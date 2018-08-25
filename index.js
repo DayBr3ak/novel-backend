@@ -1,4 +1,5 @@
 "use strict";
+global.dirname = __dirname;
 
 const compress = require("compression");
 const cors = require("cors");
