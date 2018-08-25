@@ -14,8 +14,6 @@ app.use(express.urlencoded({ extended: true }));
 // app.use("/", express.static(app.get("public")));
 
 app.use(function(req, res, next) {
-  console.log("express moddlleqsdq");
-  console.log(req.headers);
   if (req.headers["x-api"] && req.headers["x-api"] === process.env["API_KEY"]) {
     return next();
   }
@@ -26,17 +24,11 @@ app.configure(express.rest());
 
 app.configure(services);
 
-app.hooks({
-  before: {
-    all: [
-      async function(context) {
-        console.log("before hooks");
-        console.log(context.headers);
-        console.log(context.params.headers);
-      }
-    ]
-  }
-});
+// app.hooks({
+//   before: {
+//     all: [async function(context) {}]
+//   }
+// });
 
 // Configure a middleware for 404s and the error handler
 // app.use(express.notFound());

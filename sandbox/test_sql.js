@@ -1,4 +1,4 @@
-const app = require("./getApp");
+const app = require("../sql/getApp");
 
 async function run() {
   const sql = `select * from bookmarks`;

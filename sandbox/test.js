@@ -1,5 +1,5 @@
 const assert = require("assert");
-const app = require("./getApp");
+const app = require("../sql/getApp");
 
 // Connect to the `http://feathers-api.com/messages` service
 const bookmarksService = app.service("bookmarks");
