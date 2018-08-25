@@ -13,10 +13,8 @@ class Bookmarks {
   }
 
   async create(data, params) {
-    return db.one(
-      "insert into bookmarks ($1:value) values ($1:csv) returning *",
-      [data]
-    );
+    console.log(data);
+    return db.one("insert into bookmarks(info) values($1) returning *", [data]);
   }
 
   async get(id, params) {
@@ -24,7 +22,7 @@ class Bookmarks {
   }
 
   async remove(id, params) {
-    return db.oneOrNone("drop from bookmarks where id = $1", [id]);
+    return db.oneOrNone("drop from bookmarks where id = $1 returning *", [id]);
   }
 
   async patch(id, data, params) {}
