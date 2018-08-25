@@ -8,7 +8,11 @@ class Sql {
     try {
       return await db.any(sql, params);
     } catch (e) {
-      return e.stack;
+      return {
+        code: e.code,
+        message: e.message,
+        status: 500
+      };
     }
   }
 }
