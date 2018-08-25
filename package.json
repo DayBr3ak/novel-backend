@@ -28,6 +28,8 @@
     "pg-promise": "^8.4.6"
   },
   "devDependencies": {
+    "@feathersjs/rest-client": "^1.4.1",
+    "axios": "^0.18.0",
     "dotenv": "^6.0.0"
   },
   "db_version": "2"
