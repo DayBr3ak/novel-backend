@@ -51,10 +51,8 @@ class Bookmarks {
   }
 
   async patch(id, data, params) {
-    return db.oneOrNone(
-      "update bookmarks set ($1:raw) where id = $2 returning *",
-      [pgp.helpers.sets(data), id]
-    );
+    const u = pgp.helpers.update(data, null, "bookmarks");
+    return db.oneOrNone("$1:raw where id = $2 returning *", [u, id]);
   }
 }
 
