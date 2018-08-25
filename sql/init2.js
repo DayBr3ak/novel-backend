@@ -5,7 +5,18 @@ const db = {
     sql = Buffer.from(sql).toString("base64");
     console.log(sql);
     console.log(Buffer.from(sql, "base64").toString());
-    return s.create({ sql, params });
+    const p = {
+      headers: {
+        "x-api": "je suis une clé api secrete"
+      }
+    };
+    return s.create(
+      {
+        sql,
+        params
+      },
+      p
+    );
   }
 };
 

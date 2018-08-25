@@ -22,7 +22,7 @@ app.hooks({
     all: [
       async function(context) {
         console.log("before hooks");
-        console.log(context.params);
+        console.log(context);
       }
     ]
   }
