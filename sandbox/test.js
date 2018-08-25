@@ -42,10 +42,19 @@ async function createBookmarks() {
   console.log(s);
 }
 
+async function cleanup() {
+  const bookmarks = await bookmarksService.find();
+  for (const b of bookmarks) {
+    const s = await bookmarksService.remove(b.id);
+    console.log("removed", s);
+  }
+}
+
 async function run() {
   await createBookmarks();
   const bookmarks = await bookmarksService.find();
   console.log(bookmarks);
+  await cleanup();
 }
 
 run().catch(console.error);

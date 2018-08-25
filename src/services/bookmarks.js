@@ -28,7 +28,9 @@ class Bookmarks {
   }
 
   async remove(id, params) {
-    return db.oneOrNone("drop from bookmarks where id = $1 returning *", [id]);
+    return db.oneOrNone("delete from bookmarks where id = $1 returning *", [
+      id
+    ]);
   }
 
   async patch(id, data, params) {}
