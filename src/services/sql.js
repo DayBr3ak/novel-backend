@@ -4,6 +4,7 @@ const { pgp, db } = require("../utils/pg");
 class Sql {
   async create(data) {
     const sql = Buffer.from(data.sql, "base64").toString();
+    console.log("sql =", sql);
     const params = data.params;
     try {
       const val = await db.any(sql, params);
