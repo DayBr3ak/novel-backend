@@ -1,15 +1,5 @@
-const feathers = require("@feathersjs/feathers");
-const rest = require("@feathersjs/rest-client");
-const axios = require("axios");
 const assert = require("assert");
-
-const app = feathers();
-
-// Connect to a different URL
-const restClient = rest("https://novel-backend.herokuapp.com");
-
-// Configure an AJAX library (see below) with that client
-app.configure(restClient.axios(axios));
+const app = require("./getApp");
 
 // Connect to the `http://feathers-api.com/messages` service
 const bookmarksService = app.service("bookmarks");
