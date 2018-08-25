@@ -13,10 +13,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use("/", express.static(app.get("public")));
 
+app.use(function(req, res, next) {
+  console.log("express moddlleqsdq");
+  console.log(req.headers);
+  next();
+});
 // Set up Plugins and providers
 app.configure(express.rest());
 
 app.configure(services);
+
 app.hooks({
   before: {
     all: [
