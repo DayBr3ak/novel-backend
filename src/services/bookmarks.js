@@ -1,6 +1,6 @@
 const fs = require("fs");
 const pgp = require("pg-promise")();
-const db = pgp();
+const db = pgp(process.env.DATABASE_URL);
 
 const data = {
   test: "this is my data"
