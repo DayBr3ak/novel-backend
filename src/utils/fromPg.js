@@ -45,7 +45,7 @@ class Store {
     const val = await db.oneOrNone("select value from bks where slug = $1", [
       key
     ]);
-    return JSON.parse(val);
+    return JSON.parse(val.value);
   }
 
   async deleteKey(key) {
@@ -64,7 +64,7 @@ class Store {
     await this._inited;
     let tmp = await db.manyOrNone("select value from bks");
     console.log(tmp);
-    return tmp.map(x => JSON.parse(x)).map(x => [x.slug, s]);
+    return tmp.map(x => JSON.parse(x.value)).map(x => [x.slug, s]);
 
     // let tmp;
     // if (this._dirty) {
