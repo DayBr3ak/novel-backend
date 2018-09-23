@@ -45,7 +45,7 @@
         const listCt = []
         for (const line of data) {
           listCt.push(`
-          <ul>${line.slug} --- ${line.last} --- lastUpdate: ${line.updatedAt}</ul>
+          <li>${line.slug} --- ${line.last} --- lastUpdate: ${line.updatedAt}</li>
           `)
         }
         list.innerHTML = listCt.join('')
