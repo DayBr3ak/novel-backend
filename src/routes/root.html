@@ -5,8 +5,7 @@
 
     <h1 id="header">hi</h1>
 
-
-
+    <button id="refresh">Refresh</button>
 
     <input type="text" id="text" />
     <button id="send">Send</button>
@@ -89,7 +88,11 @@
       const wait = t => new Promise(r => setTimeout(r, t))
 
       async function handleCmd(cmd, payload) {
-        if (cmd === 'add') {
+        if (cmd === 'secret') {
+          localStorage.setItem('secret', payload)
+          location.reload()
+        }
+        else if (cmd === 'add') {
 
           const res = await fetch('/api/bookmarks/', {
             headers: {
@@ -146,6 +149,27 @@
           throw new Error('Command ' + cmd + ' not understood')
         }
       }
+
+      document.getElementById('refresh').addEventListener('click', async () => {
+
+        const res = await fetch('/api/bookmarks/refresh', {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'x-secret': secret
+            },
+            method: 'get'
+          })
+          if (res.status >= 300) {
+            throw new Error(res.statusText)
+          }
+
+          const body = await res.json()
+          if (body.updateUi === 1) {
+            location.reload()
+          }
+          log.innerText = JSON.stringify(body, 0, 2)
+      })
 
     </script>
 

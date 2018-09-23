@@ -139,6 +139,14 @@ router.delete("/bookmarks", async (req, res, next) => {
     if (!req.body.slug) {
       throw new Error('need body parameter "slug"');
     }
+
+    if (req.header("x-secret") !== process.env.SECRET) {
+      await wait(Math.random() * 6000 + 2500);
+      return res.json({
+        message: "ok"
+      });
+    }
+
     const slug = req.body.slug;
 
     const removed = await bkStore.deleteKey(slug);
@@ -156,7 +164,40 @@ router.delete("/bookmarks", async (req, res, next) => {
       });
     }
   } catch (e) {
-    res.status(500).send(e.message);
+    res.status(e.status || 500).send(e.message);
+    console.error(e);
+  }
+});
+
+router.get("/bookmarks/refresh", async (req, res, next) => {
+  try {
+    if (req.header("x-secret") !== process.env.SECRET) {
+      console.log("secret faux", req.header("x-secret"));
+      await wait(Math.random() * 6000 + 2500);
+      return res.json({
+        message: "ok",
+        updateUi: 0
+      });
+    }
+
+    const all = await bkStore.getAll();
+
+    for (const x of all) {
+      try {
+        console.log("checking", x[0]);
+        await check({ slug: x[0] });
+      } catch (e) {
+        console.error(e);
+        console.log("error ingored");
+      }
+    }
+
+    res.json({
+      message: "ok",
+      updateUi: 1
+    });
+  } catch (e) {
+    res.status(e.status || 500).send(e.message);
     console.error(e);
   }
 });
