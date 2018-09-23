@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 index.js",
-    "dev": "node dev.js"
+    "dev": "nodemon dev.js"
   },
   "repository": {
     "type": "git",
@@ -22,15 +22,22 @@
   "dependencies": {
     "@feathersjs/express": "^1.2.3",
     "@feathersjs/feathers": "^3.1.7",
+    "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "fs-extra": "^7.0.0",
     "helmet": "^3.13.0",
-    "pg-promise": "^8.4.6"
+    "morgan": "^1.9.1",
+    "pg-promise": "^8.4.6",
+    "sendmail": "^1.4.1"
   },
   "devDependencies": {
     "@feathersjs/rest-client": "^1.4.1",
     "axios": "^0.18.0",
-    "dotenv": "^6.0.0"
+    "dotenv": "^6.0.0",
+    "nodemon": "^1.18.4"
   },
   "db_version": "2"
 }

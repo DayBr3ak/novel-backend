@@ -1,39 +1,24 @@
+"use strict";
+
 const compress = require("compression");
+const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
-const feathers = require("@feathersjs/feathers");
-const express = require("@feathersjs/express");
-const services = require("./services");
+const bodyParser = require("body-parser");
+const express = require("express");
 
-const app = express(feathers());
+const port = process.env.PORT || "3000";
+
+const app = express();
+app.use(morgan("dev"));
 app.use(cors());
 app.use(helmet());
 app.use(compress());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// app.use("/", express.static(app.get("public")));
+app.use(bodyParser.json());
 
-app.use(function(req, res, next) {
-  if (req.headers["x-api"] && req.headers["x-api"] === process.env["API_KEY"]) {
-    return next();
-  }
-  next(new Error("bad request"));
-});
-// Set up Plugins and providers
-app.configure(express.rest());
+app.use("/api", require("./routes/setBookmarks"));
+app.use("/", require("./routes/root"));
 
-app.configure(services);
-
-// app.hooks({
-//   before: {
-//     all: [async function(context) {}]
-//   }
-// });
-
-// Configure a middleware for 404s and the error handler
-// app.use(express.notFound());
-
-const port = process.env.PORT;
 const server = app.listen(port);
 
 process.on("unhandledRejection", (reason, p) =>
