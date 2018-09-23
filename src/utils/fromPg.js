@@ -31,7 +31,7 @@ class Store {
     await this._inited;
     await db.none("insert into bks (slug, value) VALUES ($1, $2)", [
       key,
-      value
+      JSON.stringify(value)
     ]);
 
     // this._content[key] = value;
@@ -45,7 +45,7 @@ class Store {
     const val = await db.oneOrNone("select value from bks where slug = $1", [
       key
     ]);
-    return val;
+    return JSON.parse(val);
   }
 
   async deleteKey(key) {
@@ -63,7 +63,7 @@ class Store {
   async getAll() {
     await this._inited;
     let tmp = await db.manyOrNone("select value from bks");
-    return tmp;
+    return tmp.map(x => JSON.parse(x)).map(x => [x.slug, s]);
 
     // let tmp;
     // if (this._dirty) {
