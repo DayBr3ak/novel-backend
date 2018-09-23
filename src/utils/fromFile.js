@@ -16,7 +16,7 @@ class Store {
 
     try {
       this._content = JSON.parse(fs.readFileSync(this.file));
-    } catch {
+    } catch (e) {
       this._content = {};
     }
   }
