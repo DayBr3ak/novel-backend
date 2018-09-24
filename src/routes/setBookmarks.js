@@ -184,8 +184,12 @@ router.get("/bookmarks/refresh", async (req, res, next) => {
 
     for (const x of all) {
       try {
-        console.log("checking", x[0]);
-        await check({ slug: x[0] });
+        const slug = x[0];
+        console.log("checking", slug);
+        const checked = await check({ slug });
+        if (checked) {
+          await bkStore.setKey(slug, checked)
+        }
       } catch (e) {
         console.error(e);
         console.log("error ingored");
