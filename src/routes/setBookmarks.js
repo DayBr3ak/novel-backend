@@ -89,6 +89,7 @@ const check = async ({ slug }) => {
       slug,
       before: stored ? stored.last : undefined,
       last: lastChapter,
+      link,
       updatedAt: new Date()
     };
   }
@@ -182,13 +183,15 @@ router.get("/bookmarks/refresh", async (req, res, next) => {
 
     const all = await bkStore.getAll();
 
+    const slugs = [];
     for (const x of all) {
       try {
         const slug = x[0];
         console.log("checking", slug);
         const checked = await check({ slug });
         if (checked) {
-          await bkStore.setKey(slug, checked)
+          await bkStore.setKey(slug, checked);
+          slugs.push(checked);
         }
       } catch (e) {
         console.error(e);
@@ -198,6 +201,7 @@ router.get("/bookmarks/refresh", async (req, res, next) => {
 
     res.json({
       message: "ok",
+      slugs,
       updateUi: 1
     });
   } catch (e) {
