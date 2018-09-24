@@ -19,13 +19,14 @@ class Store {
 
   async setKey(key, value) {
     await this._inited;
-    try {
-      await db.none("insert into bks (slug, value) VALUES ($1, $2)", [
+    const tmp = await this.getKey(key);
+    if (tmp) {
+      await db.none("update bks set value = $2 where slug = $1", [
         key,
         JSON.stringify(value)
       ]);
-    } catch (e) {
-      await db.none("update bks set value = $2 where slug = $1", [
+    } else {
+      await db.none("insert into bks (slug, value) VALUES ($1, $2)", [
         key,
         JSON.stringify(value)
       ]);
