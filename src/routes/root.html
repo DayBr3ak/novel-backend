@@ -200,6 +200,7 @@
         if (!secret) {
           log.innerText = 'Secret manquant';
           log.style.color = 'red'
+          return;
         }
         spinner.style.display = ''
         btn.disabled = true
