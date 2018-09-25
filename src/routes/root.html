@@ -188,7 +188,7 @@
               if (x) {
                 x.last = item.last
               }
-              data_new.push(`<li><a href="${item.link}">${item.slug}</a></li>`)
+              data_new.push(`<li><a href="${item.link}" class="has-text-success"> >>> ${item.slug}</a></li>`)
             }
             document.getElementById('list_new').innerHTML = data_new.join('')
             updateList()
