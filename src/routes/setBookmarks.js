@@ -114,6 +114,14 @@ router.post("/bookmarks", async (req, res, next) => {
       slug: payload.slug,
       updatedAt: new Date()
     };
+    
+    const has = await bkStore.getKey(payload.slug);
+    if (has) {
+      return res.json({
+        message: payload.slug + ' already in db',
+        updateUi: 0
+      });
+    }
 
     const checked = await check(val);
     if (checked) {
