@@ -53,7 +53,7 @@ const check = async ({ slug }) => {
     .filter(x => x.attr("href").includes("html"));
 
   const lastChapter = t.length;
-
+  let link
   const stored = await bkStore.getKey(slug);
   if (!stored || stored.last < lastChapter) {
     if (stored) {
@@ -61,7 +61,7 @@ const check = async ({ slug }) => {
 
       const delta = lastChapter - stored.last;
       // const delta = 1;
-      const link =
+      link =
         "http://m.wuxiaworld.co/" +
         slug +
         "/" +
