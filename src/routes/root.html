@@ -26,7 +26,7 @@
     <pre id="log"></pre>
 
     <ul id="list_new"></ul>
-    <ul id="list"></ul>
+    <div id="list"></div>
 
 
     <script>
@@ -61,14 +61,40 @@
   </div>
 </li>`
       }
+      
+      const createTable = (lines) => {
+        let b = `<table class="table">
+  <thead>
+    <tr>
+      <th>Chap</th>
+      <th>Name</th>
+      <th>UpdatedAt</th>
+    </tr>
+  </thead>
+  <tbody>
+`;
+        let ct = 0
+       for (const line of lines) {
+         const odd = ct % 2 === 0;
+         b += `<tr class="${odd ? 'is-selected' : ''}">
+            <th>${line.last}</th>
+            <td>${line.slug}</td>
+            <td>${new Date(line.updatedAt).toLocaleString()}</td>
+            </tr>`;
+         ct ++;
+       }
+        b += `</tbody></table>`;
+        return b;
+      }
 
       const updateList = () => {
         const list = document.getElementById('list')
-        const listCt = []
-        for (const line of data) {
-          listCt.push(makeListElem(line))
-        }
-        list.innerHTML = listCt.join('')
+//         const listCt = []
+//         for (const line of data) {
+//           listCt.push(makeListElem(line))
+//         }
+        
+        list.innerHTML = createTable(data);
       }
 
       updateList()
