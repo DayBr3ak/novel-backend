@@ -15,6 +15,12 @@ app.use(cors());
 app.use(helmet());
 app.use(compress());
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
 
 app.use("/api", require("./routes/setBookmarks"));
 app.use("/", require("./routes/root"));
