@@ -52,14 +52,21 @@
         log.innerText = e.message
         throw e
       }
+      
+      const makeListElem = (line) => {
+        return `
+<li>
+  <div class="notification is-primary">
+    ${line.slug} - ${line.last} - lastUpdate: ${new Date(line.updatedAt).toLocaleString()}
+  </div>
+</li>`
+      }
 
       const updateList = () => {
         const list = document.getElementById('list')
         const listCt = []
         for (const line of data) {
-          listCt.push(`
-          <li>${line.slug} --- ${line.last} --- lastUpdate: ${line.updatedAt}</li>
-          `)
+          listCt.push(makeListElem(line))
         }
         list.innerHTML = listCt.join('')
       }
