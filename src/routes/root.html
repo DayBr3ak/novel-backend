@@ -197,6 +197,10 @@
       }
 
       document.getElementById('refresh').addEventListener('click', async () => {
+        if (!secret) {
+          log.innerText = 'Secret manquant';
+          log.style.color = 'red'
+        }
         spinner.style.display = ''
         btn.disabled = true
         try {
@@ -226,11 +230,11 @@
             document.getElementById('list_new').innerHTML = data_new.join('')
             updateList()
           }
+          log.innerText = JSON.stringify(body, 0, 2)
         } finally {
           spinner.style.display = 'none'
           btn.disabled = false
         }
-         log.innerText = JSON.stringify(body, 0, 2)
       })
 
     </script>
