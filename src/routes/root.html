@@ -20,6 +20,18 @@
       </div>
     </div>
     
+    <div class="field">
+      <div class="control">
+        <div class="select is-primary">
+          <select id="selaction">
+            <option value="add">Add</option>
+            <option value="delete">Delete</option>
+            <option value="secret">Secret</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
     <button id="send" class="button is-primary">Send</button>
     <div class="lds-ring" id="spinner" style="display: none"><div></div><div></div><div></div><div></div></div>
 
@@ -117,8 +129,10 @@
         spinner.style.display = ''
         btn.disabled = true
 
-        const [cmd, ..._rest] = text.split(' ')
-        const rest = _rest.join(' ')
+        //const [cmd, ..._rest] = text.split(' ')
+        //const rest = _rest.join(' ')
+        const cmd = selaction.value;
+        const rest = text;
 
         handleCmd(cmd, rest).then(message => {
           log.innerText = JSON.stringify(message, 0, 2)}
