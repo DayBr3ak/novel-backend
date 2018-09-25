@@ -1,14 +1,26 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head><title>Hi bookmark</title></head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bookm4rks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+  </head>
 
   <body>
 
     <h1 id="header">hi</h1>
 
-    <button id="refresh">Refresh</button>
+    <button id="refresh" class="button is-primary">Refresh</button>
 
-    <input type="text" id="text" />
-    <button id="send">Send</button>
+    <div class="field">
+      <div class="control">
+        <input id="text" class="input is-primary" type="text" placeholder="Primary input">
+      </div>
+    </div>
+    
+    <button id="send" class="button is-primary">Send</button>
     <div class="lds-ring" id="spinner" style="display: none"><div></div><div></div><div></div><div></div></div>
 
     <pre id="log"></pre>
