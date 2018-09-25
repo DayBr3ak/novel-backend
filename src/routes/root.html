@@ -30,7 +30,7 @@
 
 
     <script>
-      const secret = localStorage.getItem('secret')
+      let secret = localStorage.getItem('secret')
       if (secret === null) {
         document.getElementById('header').innerText = "Secret manquant"
       } else {
@@ -135,8 +135,9 @@
 
       async function handleCmd(cmd, payload) {
         if (cmd === 'secret') {
-          localStorage.setItem('secret', payload)
-          location.reload()
+          localStorage.setItem('secret', payload);
+          secret = payload;
+          return 'secret=' + payload;
         }
         else if (cmd === 'add') {
 
