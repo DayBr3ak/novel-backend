@@ -5,14 +5,17 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 const bkStore = require("../services/bkStore");
+const { makeChapLink, transformBk } = require("../utils/transform-bk");
 const router = express.Router();
 
 router.get("/bookmarks", (req, res, next) => {
   bkStore.getAll().then(m => {
-    res.json(m);
+    // [slug, bookmark]
+    const tmp = m.map(x => {
+      return [x[0], transformBk(x[1])];
+    });
+    res.json(tmp);
   });
-
-  // res.json("hello");
 });
 
 const check = async ({ slug }) => {
@@ -61,11 +64,7 @@ const check = async ({ slug }) => {
 
       const delta = lastChapter - stored.last;
       // const delta = 1;
-      link =
-        "http://m.wuxiaworld.co/" +
-        slug +
-        "/" +
-        t[lastChapter - delta].attr("href");
+      link = makeChapLink(slug, t[lastChapter - delta].attr("href"));
       await sendMail(lastChapter, slug, stored, link);
     }
 
@@ -73,7 +72,9 @@ const check = async ({ slug }) => {
       slug,
       before: stored ? stored.last : undefined,
       last: lastChapter,
+      chapList: t.map(x => x.attr("href")),
       link,
+      current: stored ? stored.current : 1,
       updatedAt: new Date()
     };
   }
@@ -109,12 +110,16 @@ router.post("/bookmarks", async (req, res, next) => {
 
     const checked = await check(val);
     if (checked) {
-      await bkStore.setKey(payload.slug, checked);
-      res.json({
-        ...checked,
+      const bookmark = {
+        ...checked
+      };
+      await bkStore.setKey(payload.slug, bookmark);
+      const response = {
+        ...transformBk(bookmark),
         message: "ok",
         updateUi: 1
-      });
+      };
+      res.json(response);
     } else {
       res.json({
         message: "nothing to do",
@@ -162,6 +167,31 @@ router.delete("/bookmarks", async (req, res, next) => {
   }
 });
 
+router.patch("/bookmarks/:slug", async (req, res, next) => {
+  try {
+    if (req.header("x-secret") !== process.env.SECRET) {
+      console.log("secret faux", req.header("x-secret"));
+      await wait(Math.random() * 6000 + 2500);
+      return res.json({
+        message: "ok",
+        updateUi: 0
+      });
+    }
+    console.log(req.body, req.params.slug);
+
+    const bk = await bkStore.getKey(req.params.slug);
+
+    for (const key of Object.keys(bk)) {
+      bk[key] = req.body[key] ? req.body[key] : bk[key];
+    }
+
+    await bkStore.setKey(req.params.slug, bk);
+  } catch (e) {
+    res.status(e.status || 500).send(e.message);
+    console.error(e);
+  }
+});
+
 router.get("/bookmarks/refresh", async (req, res, next) => {
   try {
     if (req.header("x-secret") !== process.env.SECRET) {
@@ -183,7 +213,7 @@ router.get("/bookmarks/refresh", async (req, res, next) => {
         const checked = await check({ slug });
         if (checked) {
           await bkStore.setKey(slug, checked);
-          slugs.push(checked);
+          slugs.push(transformBk(checked));
         }
       } catch (e) {
         console.error(e);

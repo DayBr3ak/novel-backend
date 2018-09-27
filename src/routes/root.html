@@ -58,6 +58,7 @@
       let data
       try {
         data = JSON.parse(`{{values}}`)
+        window.data = data
       } catch (e) {
         btn.disabled = true;
         log.style.color = 'red'
@@ -65,20 +66,12 @@
         throw e
       }
 
-      const makeListElem = (line) => {
-        return `
-<li>
-  <div class="notification is-primary">
-    ${line.slug} - ${line.last} - lastUpdate: ${new Date(line.updatedAt).toLocaleString()}
-  </div>
-</li>`
-      }
-
       const createTable = (lines) => {
         let b = `<table class="table">
   <thead>
     <tr>
-      <th>Chap</th>
+      <th>Last</th>
+      <th>Current</th>
       <th>Name</th>
       <th>UpdatedAt</th>
     </tr>
@@ -90,7 +83,10 @@
          const odd = ct % 2 === 0;
          b += `<tr class="${odd ? 'is-selected' : ''}">
             <th>${line.last}</th>
-            <td><a href="${line.link}">${line.slug}</a></td>
+            <td>
+              <input type="number" class="input xxx" value="${line.current}" data-slug="${line.slug}"></input>
+              </td>
+            <td><a href="${line.currentLink}">${line.slug}</a></td>
             <td>${new Date(line.updatedAt).toLocaleString()}</td>
             </tr>`;
          ct ++;
@@ -101,12 +97,30 @@
 
       const updateList = () => {
         const list = document.getElementById('list')
-//         const listCt = []
-//         for (const line of data) {
-//           listCt.push(makeListElem(line))
-//         }
-
         list.innerHTML = createTable(data);
+      }
+
+      document.body.addEventListener('change', function(e) {
+        if (e.target.matches('input[class="input xxx"]')) {
+          let val = Number(e.target.value)
+          val = isNaN(val) ? 1 : val
+          onChapChange(e.target.dataset.slug, val)
+        }
+      })
+
+      async function onChapChange(slug, val) {
+        console.log(slug, val)
+        const res = await fetch('/api/bookmarks/' + slug, {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'x-secret': secret
+            },
+            method: 'PATCH',
+            body: JSON.stringify({
+              current: val
+            })
+          })
       }
 
       updateList()

@@ -4,12 +4,13 @@ const express = require("express");
 
 const router = express.Router();
 const bkStore = require("../services/bkStore");
+const { transformBk } = require("../utils/transform-bk");
 
 const v = {
   values: async function() {
     const all = await bkStore.getAll();
 
-    return all.map(x => x[1]);
+    return all.map(x => transformBk(x[1]));
   }
 };
 
