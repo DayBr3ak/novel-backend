@@ -20,29 +20,29 @@
   },
   "homepage": "https://github.com/DayBr3ak/novel-backend#readme",
   "dependencies": {
-    "@feathersjs/express": "^1.2.3",
-    "@feathersjs/feathers": "^3.1.7",
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "cheerio": "^1.0.0-rc.2",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
+    "cross-env": "^5.2.0",
     "express": "^4.16.3",
     "fs-extra": "^7.0.0",
     "helmet": "^3.13.0",
     "morgan": "^1.9.1",
     "pg-promise": "^8.4.6",
-    "axios": "^0.18.0",
     "sendmail": "^1.4.1"
   },
   "devDependencies": {
-    "@feathersjs/rest-client": "^1.4.1",
-    "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
     "nodemon": "^1.18.4"
   },
   "db_version": "2",
   "nodemonConfig": {
     "verbose": true,
-    "ignore": ["*.test.js", "node_modules/*, filestore/*, nodemon.json"]
+    "ignore": [
+      "*.test.js",
+      "node_modules/*, filestore/*, nodemon.json"
+    ]
   }
 }
