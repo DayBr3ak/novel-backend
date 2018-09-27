@@ -5,16 +5,28 @@ const { pgp, db } = require("./pg");
 class Store {
   constructor() {
     this._inited = db
-      .none(
-        `
+      .one("select 1")
+      .then(() => {
+        console.log("connected to db");
+      })
+      .catch(e => {
+        console.log("cant connect");
+        console.error(e.message);
+        process.exit(1);
+      })
+      .then(() => {
+        return db
+          .none(
+            `
       create table bks (
         slug text primary key
         , value text not null
       )
     `
-      )
-      .then(() => console.log("created table bks"))
-      .catch(() => console.log("bks already exists"));
+          )
+          .then(() => console.log("created table bks"))
+          .catch(() => console.log("bks already exists"));
+      });
   }
 
   async setKey(key, value) {

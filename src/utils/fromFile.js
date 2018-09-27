@@ -11,6 +11,7 @@ class Store {
   constructor(storeName) {
     this.file = getFile(storeName);
     fs.ensureFileSync(this.file);
+    console.log("using file as a store", this.file);
 
     this._dirty = true;
 
@@ -23,7 +24,7 @@ class Store {
 
   async setKey(key, value) {
     this._content[key] = value;
-    await fs.writeFile(this.file, JSON.stringify(this._content));
+    await fs.writeFile(this.file, toJSON(this._content));
     this._dirty = true;
     return this;
   }
@@ -35,7 +36,7 @@ class Store {
   async deleteKey(key) {
     if (this._content[key]) {
       delete this._content[key];
-      await fs.writeFile(this.file, JSON.stringify(this._content));
+      await fs.writeFile(this.file, toJSON(this._content));
       return true;
     }
     return false;
@@ -55,3 +56,7 @@ class Store {
 }
 
 module.exports = Store;
+
+function toJSON(o) {
+  return JSON.stringify(o, 0, 2);
+}

@@ -53,7 +53,7 @@ const check = async ({ slug }) => {
     .filter(x => x.attr("href").includes("html"));
 
   const lastChapter = t.length;
-  let link
+  let link;
   const stored = await bkStore.getKey(slug);
   if (!stored || stored.last < lastChapter) {
     if (stored) {
@@ -65,24 +65,8 @@ const check = async ({ slug }) => {
         "http://m.wuxiaworld.co/" +
         slug +
         "/" +
-        t[lastChapter - delta - 1].attr("href");
-      const domain = process.env.MAILGUN_DOMAIN;
-      const recip = process.env.RECIPIENT;
-      const apiKey = process.env.MAILGUN_API;
-      await axios({
-        method: "POST",
-        url: "https://api.mailgun.net/v3/" + domain + "/messages",
-        auth: {
-          username: "api",
-          password: apiKey
-        },
-        params: {
-          from: "bkservice@" + domain,
-          to: recip,
-          subject: `C-${lastChapter} : ${slug}`,
-          text: `New chapter(s) since ${stored.updatedAt}\n\n${link}\n`
-        }
-      }).then(() => console.log("mail sent"));
+        t[lastChapter - delta].attr("href");
+      await sendMail(lastChapter, slug, stored, link);
     }
 
     return {
@@ -114,11 +98,11 @@ router.post("/bookmarks", async (req, res, next) => {
       slug: payload.slug,
       updatedAt: new Date()
     };
-    
+
     const has = await bkStore.getKey(payload.slug);
     if (has) {
       return res.json({
-        message: payload.slug + ' already in db',
+        message: payload.slug + " already in db",
         updateUi: 0
       });
     }
@@ -219,3 +203,31 @@ router.get("/bookmarks/refresh", async (req, res, next) => {
 });
 
 module.exports = router;
+async function sendMail(lastChapter, slug, stored, link) {
+  if (
+    process.env.NODE_ENV !== "production" ||
+    process.env.FORCE_MAIL !== "true"
+  ) {
+    return;
+  }
+  if (process.env.FORCE_MAIL === "true") {
+    console.log("force mail send");
+  }
+  const domain = process.env.MAILGUN_DOMAIN;
+  const recip = process.env.RECIPIENT;
+  const apiKey = process.env.MAILGUN_API;
+  await axios({
+    method: "POST",
+    url: "https://api.mailgun.net/v3/" + domain + "/messages",
+    auth: {
+      username: "api",
+      password: apiKey
+    },
+    params: {
+      from: "bkservice@" + domain,
+      to: recip,
+      subject: `C-${lastChapter} : ${slug}`,
+      text: `New chapter(s) since ${stored.updatedAt}\n\n${link}\n`
+    }
+  }).then(() => console.log("mail sent"));
+}

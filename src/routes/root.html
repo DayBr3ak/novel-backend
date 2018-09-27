@@ -19,7 +19,7 @@
         <input id="text" class="input is-primary" type="text" placeholder="Primary input">
       </div>
     </div>
-    
+
     <div class="field">
       <div class="control">
         <div class="select is-primary">
@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    
+
     <button id="send" class="button is-primary">Send</button>
     <div class="lds-ring" id="spinner" style="display: none"><div></div><div></div><div></div><div></div></div>
 
@@ -64,7 +64,7 @@
         log.innerText = e.message
         throw e
       }
-      
+
       const makeListElem = (line) => {
         return `
 <li>
@@ -73,7 +73,7 @@
   </div>
 </li>`
       }
-      
+
       const createTable = (lines) => {
         let b = `<table class="table">
   <thead>
@@ -90,7 +90,7 @@
          const odd = ct % 2 === 0;
          b += `<tr class="${odd ? 'is-selected' : ''}">
             <th>${line.last}</th>
-            <td>${line.slug}</td>
+            <td><a href="${line.link}">${line.slug}</a></td>
             <td>${new Date(line.updatedAt).toLocaleString()}</td>
             </tr>`;
          ct ++;
@@ -105,7 +105,7 @@
 //         for (const line of data) {
 //           listCt.push(makeListElem(line))
 //         }
-        
+
         list.innerHTML = createTable(data);
       }
 
@@ -239,7 +239,8 @@
             for (const item of body.slugs) {
               const x = data.find(x => x.slug === item.slug)
               if (x) {
-                x.last = item.last
+                Object.assign(x, item)
+                // x.last = item.last
               }
               data_new.push(`<li><a href="${item.link}" class="has-text-success"> >>> ${item.slug}</a></li>`)
             }
