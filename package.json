@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@feathersjs/rest-client": "^1.4.1",
+    "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
     "nodemon": "^1.18.4"
   },
