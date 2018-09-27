@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.get("/bookmarks", (req, res, next) => {
   bkStore.getAll().then(m => {
+    console.log(m.map(x => x[0]));
     // [slug, bookmark]
     const tmp = m.map(x => {
       return [x[0], transformBk(x[1])];
