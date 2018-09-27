@@ -8,6 +8,18 @@ const bkStore = require("../services/bkStore");
 const { makeChapLink, transformBk } = require("../utils/transform-bk");
 const router = express.Router();
 
+async function sanitize() {
+  const m = await bkStore.getAll();
+  for (const [slug, bk] of m) {
+    if (!bk.chapList) {
+      await bkStore.deleteKey(slug);
+      const checked = await check({ slug, noemit: true });
+      await bkStore.setKey(slug, checked);
+    }
+  }
+}
+sanitize().then(console.error);
+
 router.get("/bookmarks", (req, res, next) => {
   bkStore.getAll().then(m => {
     console.log(m.map(x => x[0]));
@@ -19,7 +31,7 @@ router.get("/bookmarks", (req, res, next) => {
   });
 });
 
-const check = async ({ slug }) => {
+const check = async ({ slug, noemit = false }) => {
   const res = await axios({
     method: "get",
     url: `http://m.wuxiaworld.co/${slug}/all.html`,
@@ -60,7 +72,7 @@ const check = async ({ slug }) => {
   let link;
   const stored = await bkStore.getKey(slug);
   if (!stored || stored.last < lastChapter) {
-    if (stored) {
+    if (stored && !noemit) {
       // emit event?
 
       const delta = lastChapter - stored.last;
