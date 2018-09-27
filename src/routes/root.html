@@ -127,7 +127,7 @@
           const d = await res.json()
           if (d.updateUi) {
             const item = data.find(x => x.slug === d.slug)
-            if (tem) {
+            if (item) {
               Object.assign(item, d);
               updateList()
             }
