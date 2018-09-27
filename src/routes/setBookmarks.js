@@ -18,7 +18,9 @@ async function sanitize() {
     }
   }
 }
-sanitize().then(console.error);
+sanitize()
+  .then(() => console.log("sanitize done"))
+  .catch(console.error);
 
 router.get("/bookmarks", (req, res, next) => {
   bkStore.getAll().then(m => {
@@ -199,6 +201,11 @@ router.patch("/bookmarks/:slug", async (req, res, next) => {
     }
 
     await bkStore.setKey(req.params.slug, bk);
+    res.json({
+      ...transformBk(bk),
+      message: "ok",
+      updateUi: 1
+    });
   } catch (e) {
     res.status(e.status || 500).send(e.message);
     console.error(e);

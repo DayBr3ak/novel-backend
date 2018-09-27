@@ -121,6 +121,17 @@
               current: val
             })
           })
+          if (res.status >= 300) {
+            throw new Error('err patch')
+          }
+          const d = await res.json()
+          if (d.updateUi) {
+            const item = data.find(x => x.slug === d.slug)
+            if (tem) {
+              Object.assign(item, d);
+              updateList()
+            }
+          }
       }
 
       updateList()
