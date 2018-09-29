@@ -6,10 +6,11 @@
     "dev": "sapper dev",
     "build": "sapper build",
     "export": "sapper export",
-    "start": "node build",
+    "start": "cross-env NODE_ENV=production node build",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test": "run-p --race dev cy:run"
+    "test": "run-p --race dev cy:run",
+    "postinstall": "sapper build"
   },
   "dependencies": {
     "axios": "^0.18.0",
