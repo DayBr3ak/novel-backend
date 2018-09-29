@@ -1,6 +1,8 @@
+import getSecret from "../../../backend/services/getSecret";
+
 const secretMiddleware = method => {
   return async function $secretMiddleware(req, res) {
-    if (req.headers["x-secret"] !== "mysecret") {
+    if (req.headers["x-secret"] !== getSecret()) {
       console.log("bad secret");
       await wait(Math.random() * 3000 + 2000);
       res.writeHead(200, {

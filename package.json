@@ -1,49 +1,30 @@
 {
-  "name": "novel-backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "TODO",
+  "description": "TODO",
+  "version": "0.0.1",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=production node --optimize_for_size --max_old_space_size=460 --gc_interval=100 index.js",
-    "dev": "nodemon dev.js"
+    "dev": "sapper dev",
+    "build": "sapper build",
+    "export": "sapper export",
+    "start": "node build",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "test": "run-p --race dev cy:run"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DayBr3ak/novel-backend.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/DayBr3ak/novel-backend/issues"
-  },
-  "homepage": "https://github.com/DayBr3ak/novel-backend#readme",
   "dependencies": {
     "axios": "^0.18.0",
-    "body-parser": "^1.18.3",
-    "cheerio": "^1.0.0-rc.2",
-    "compression": "^1.7.3",
-    "cors": "^2.8.4",
-    "cross-env": "^5.2.0",
-    "express": "^4.16.3",
+    "compression": "^1.7.1",
+    "dotenv": "^6.0.0",
     "fs-extra": "^7.0.0",
-    "helmet": "^3.13.0",
-    "morgan": "^1.9.1",
     "pg-promise": "^8.4.6",
-    "sendmail": "^1.4.1",
-    "svelte": "^2.13.5"
+    "polka": "^0.4.0",
+    "sapper": "^0.21.0",
+    "sirv": "^0.2.0"
   },
   "devDependencies": {
-    "dotenv": "^6.0.0",
-    "nodemon": "^1.18.4"
-  },
-  "db_version": "2",
-  "nodemonConfig": {
-    "verbose": true,
-    "ignore": [
-      "*.test.js",
-      "node_modules/*, filestore/*, nodemon.json"
-    ]
+    "npm-run-all": "^4.1.2",
+    "svelte": "^2.0.0",
+    "svelte-loader": "^2.9.0",
+    "webpack": "^4.7.0"
   }
 }
