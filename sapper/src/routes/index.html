@@ -1,0 +1,259 @@
+<svelte:head>
+	<title>Sapper project template</title>
+</svelte:head>
+
+<h1 on:click='toggleSecret()'>{ shouldShowSecret ? secret : 'Great success!' }</h1>
+
+<button class="button is-primary" on:click='refresh()' class:is-loading='isRefreshing'>Refresh</button>
+
+<div class="field">
+	<div class="control">
+		<input bind:value=textValue id="text" class="input is-primary" type="text" placeholder="Primary input">
+	</div>
+</div>
+
+<div class="field">
+	<div class="control">
+		<div class="select is-primary">
+			<select bind:value=selected>
+				{#each commandsMeta as option}
+          <option value={option.value}>{option.label}</option>
+				{/each}
+			</select>
+		</div>
+	</div>
+</div>
+
+<button id="send" class="button is-primary" class:is-loading='actionPending' on:click='doCommand()'>Send</button>
+
+{#each newUpdates as line}
+  <p><a href={line.novelLink} class="has-text-success">{line.slug}</a></p>
+{/each}
+
+<SlugTable lines='{lines}' on:delete='del(event.slug)' on:changeCurrent='changeCurrent(event)'></SlugTable>
+
+<script>
+  const COMMANDZ = {
+    DEL: 'del',
+    ADD: 'addz',
+    SECRET: 'sec'
+  }
+
+	export default {
+		components: {
+			SlugTable: '../components/SlugTable.html'
+    },
+
+    data() {
+      return {
+        commandsMeta: [
+          {label: 'Add', value: COMMANDZ.ADD},
+          {label: 'Delete', value: COMMANDZ.DEL},
+          {label: 'Secret', value: COMMANDZ.SECRET}
+        ],
+        textValue: '',
+        lines: [],
+        newUpdates: []
+      }
+    },
+
+    oncreate() {
+      const secret = localStorage.getItem('secret')
+      this.set({ secret })
+    },
+
+    onstate({ changed, current, previous}) {
+      if (changed.secret) {
+        console.log('onstate: secret changed', changed.secret, current.secret)
+        localStorage.setItem('secret', current.secret)
+      }
+    },
+
+		async preload({ params, query }) {
+      try {
+        const res = await this.fetch('/api/bookmarks')
+        const json = await res.json()
+
+        return {lines: json}
+      } catch(e) {
+        return {
+          lines:[],
+          error: e
+        }
+      }
+		},
+
+		methods: {
+      toggleSecret() {
+        const { shouldShowSecret } = this.get()
+        this.set({ shouldShowSecret: !shouldShowSecret})
+      },
+
+			async refresh() {
+        const { lines, secret } = this.get()
+        this.set({ isRefreshing: true})
+        try {
+          const res = await fetch('/api/bookmarks/refresh', {
+            method: 'GET',
+            headers: {
+              'x-secret': secret
+            }
+          })
+
+          if (res.status >= 300) {
+            throw new Error('error: ' + res.status + ' : ' + res.statusText)
+          }
+
+          const data = await res.json()
+
+          const bks = data.slugs
+          const newUpdates = []
+          for (const bk of bks) {
+            const v = lines.find(x => x.slug === bk.slug)
+            if (v) {
+              Object.assign(v, bk)
+              newUpdates.push(v)
+            }
+          }
+
+          this.set({ lines, newUpdates })
+        } catch (e) {
+
+        } finally {
+          this.set({ isRefreshing: false})
+        }
+      },
+
+      async add(slug) {
+        console.log('add', slug)
+        const { secret } = this.get()
+        try {
+          this.set({ actionPending: true})
+          const res = await fetch('/api/bookmarks', {
+            method: 'POST',
+            headers: {
+              'x-secret': secret
+            },
+            body: JSON.stringify({
+              slug
+            })
+          })
+          if (res.status >= 300) {
+            console.error(`error: ${res.status} ${res.statusText}`)
+            return
+          }
+          const json = await res.json()
+          const {lines} = this.get()
+          this.set({ lines: [...lines, json]})
+          console.log(json)
+        } catch(e) {
+          console.error('Error parsing response json')
+        } finally {
+          this.set({ actionPending: false })
+        }
+
+      },
+
+      async del(slug) {
+        const { lines, secret } = this.get()
+        try {
+          const newLines = lines.filter(x => x.slug !== slug)
+          if (newLines.length !== lines.length) {
+
+            const res = await fetch('/api/bookmarks/' + slug, {
+              method: 'DELETE',
+              headers: {
+                'x-secret': secret
+              }
+            })
+
+            if (res.status >= 300) {
+              throw new Error('error: ' + res.status + ' : ' + res.statusText)
+            }
+
+            const data = await res.json()
+            console.log('del', slug)
+            this.set({ lines: newLines})
+          }
+        } catch (e) {
+          this.set({ lines: [...lines]})
+        }
+      },
+
+			doCommand() {
+        const {selected, textValue} = this.get()
+        if (selected === COMMANDZ.SECRET) {
+          this.set({ secret: textValue, textValue: '' })
+        }
+        if (selected === COMMANDZ.ADD) {
+          this.add(textValue)
+        }
+        if (selected === COMMANDZ.DEL) {
+          this.del(textValue)
+        }
+      },
+
+      async changeCurrent({ val, line}) {
+        console.log('changecurrent', val, line)
+        const { secret, lines } = this.get()
+        try {
+          const res = await fetch('/api/bookmarks/' + line.slug, {
+            method: 'PATCH',
+            headers: {
+              'x-secret': secret
+            },
+            body: JSON.stringify({
+              current: val
+            })
+          })
+
+          if (res.status >= 300) {
+            throw new Error('error: ' + res.status + ' : ' + res.statusText)
+          }
+          const data = await res.json()
+          const v = lines.find(x => x.slug === line.slug)
+
+          Object.assign(v, data)
+          this.set({ lines })
+        } catch (e) {
+
+        }
+      }
+		}
+	}
+
+</script>
+
+<!-- <style>
+	h1, figure, p {
+		text-align: center;
+		margin: 0 auto;
+	}
+
+	h1 {
+		font-size: 2.8em;
+		text-transform: uppercase;
+		font-weight: 700;
+		margin: 0 0 0.5em 0;
+	}
+
+	figure {
+		margin: 0 0 1em 0;
+	}
+
+	img {
+		width: 100%;
+		max-width: 400px;
+		margin: 0 0 1em 0;
+	}
+
+	p {
+		margin: 1em auto;
+	}
+
+	@media (min-width: 480px) {
+		h1 {
+			font-size: 4em;
+		}
+	}
+</style> -->

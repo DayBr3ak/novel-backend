@@ -1,6 +1,11 @@
 "use strict";
-const fs = require("fs");
+require("svelte/ssr/register")({
+  hydratable: true
+});
+const svelte = require("svelte");
+const fs = require("fs-extra");
 const express = require("express");
+const Thing = require("./root2.html");
 
 const router = express.Router();
 const bkStore = require("../services/bkStore");
@@ -13,6 +18,31 @@ const v = {
     return all.map(x => transformBk(x[1]));
   }
 };
+
+router.get("/dev", async (req, res, next) => {
+  try {
+    const compiled = Thing.render({
+      lines: [
+        { slug: "okok", last: 10, currentLink: "??", updatedAt: Date.now() }
+      ]
+    });
+    console.log(compiled);
+
+    const source = await fs.readFile(__dirname + "/root2.html", "utf8");
+    const c = svelte.compile(source, {
+      hydratable: true
+    });
+
+    console.log("-----");
+    console.log(c.js);
+    await fs.writeFile(__dirname + "/root.svelte.js", c.js.code);
+
+    res.send(compiled.html);
+  } catch (e) {
+    console.error(e);
+    res.sendStatus(e.status || 500);
+  }
+});
 
 router.get("/", (req, res, next) => {
   fs.readFile(__dirname + "/root.html", "utf8", (err, html) => {

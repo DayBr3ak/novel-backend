@@ -31,7 +31,8 @@
     "helmet": "^3.13.0",
     "morgan": "^1.9.1",
     "pg-promise": "^8.4.6",
-    "sendmail": "^1.4.1"
+    "sendmail": "^1.4.1",
+    "svelte": "^2.13.5"
   },
   "devDependencies": {
     "dotenv": "^6.0.0",

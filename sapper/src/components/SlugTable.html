@@ -1,0 +1,87 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>Last</th>
+        <th>Current</th>
+        <th>Name</th>
+        <th>UpdatedAt</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {#each lines as line, i}
+      <tr class:is-selected='(i % 2) === 0'>
+          <th>{line.last}</th>
+          <td>
+            <input type="number" class="input"
+              value={line.current}
+              on:change='fire("changeCurrent", {val: Number(event.target.value), line})' />
+            </td>
+          <td>
+            <strong>
+              <a href={line.currentLink} target='_blank'>{line.slug}</a>
+            </strong>
+          </td>
+          <td>{new Date(line.updatedAt).toLocaleString()}</td>
+          <td><a class="delete is-danger" on:click='open(line)' href="/#"> </a></td>
+        </tr>
+    {/each}
+
+    </tbody>
+  </table>
+
+  <div class="modal" class:is-active=modalOpen>
+    <div class="modal-background" on:click='onCancel()'></div>
+    <div class="modal-content">
+      <!-- Any other Bulma elements you want -->
+      <div class="box">
+          <article class="media">
+              <div class="media-content">
+                <div class="content">
+                  <p>
+                    Sure you want to delete ? <strong>{toDelete ? toDelete.slug : ''}</strong>
+                  </p>
+                  <button class="button is-primary" on:click='onYes(toDelete)' class:is-loading='actionPending'>Yes</button>
+                  <button class="button is-danger" on:click='onCancel()'>Cancel</button>
+                </div>
+              </div>
+          </article>
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" on:click='onCancel()'></button>
+  </div>
+
+  <script>
+
+  export default {
+    data() {
+      return {
+        modalOpen: false,
+        toDelete: undefined
+      }
+    },
+
+    onstate({changed, current, previous}) {
+      if (changed.lines) {
+        this.set({ modalOpen: false, actionPending: false })
+      }
+    },
+
+    methods: {
+      onYes(line) {
+        this.set({ actionPending: true })
+        this.fire("delete", line)
+      },
+
+      onCancel() {
+        this.set({modalOpen: false, actionPending: false})
+      },
+
+      open(line) {
+        this.set({modalOpen: true, toDelete: line, actionPending: false})
+      }
+    }
+  }
+
+  </script>

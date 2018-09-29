@@ -1,0 +1,32 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Last</th>
+      <th>Current</th>
+      <th>Name</th>
+      <th>UpdatedAt</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {#each lines as line}
+		<tr class="${odd ? 'is-selected' : ''}">
+        <th>${line.last}</th>
+        <td>
+          <input type="number" class="input xxx" value="${line.current}" data-slug="${line.slug}" />
+          </td>
+        <td><a href='{line.currentLink}' target='_blank'>{line.slug}</a></td>
+        <td>{new Date(line.updatedAt).toLocaleString()}</td>
+      </tr>
+	{/each}
+
+  </tbody>
+</table>
+
+<script>
+
+export default {
+
+}
+
+</script>
