@@ -66,7 +66,7 @@ class Store {
   async getAll() {
     await this._inited;
     let tmp = await db.manyOrNone("select value from bks");
-    return tmp.map(x => JSON.parse(x.value)).map(x => [x.slug, x]);
+    return tmp.map(x => JSON.parse(x.value));
   }
 }
 
