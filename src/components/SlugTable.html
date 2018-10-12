@@ -24,7 +24,7 @@
             </strong>
           </td>
           <td>{new Date(line.updatedAt).toLocaleString()}</td>
-          <td><a class="delete is-danger" on:click='open(line)' href="/#"> </a></td>
+          <td><a class="delete is-danger" on:click='open(line)' href="/#" aria-label={"delete-" + line.slug}> </a></td>
         </tr>
     {/each}
 
