@@ -14,7 +14,10 @@
       <tr class:is-selected='(i % 2) === 0'>
           <th>{line.last}</th>
           <td>
-            <input type="number" class="input"
+            <input
+              aria-label="ChangeCurrentChap"
+              type="number"
+              class="input"
               value={line.current}
               on:change='fire("changeCurrent", {val: Number(event.target.value), line})' />
             </td>

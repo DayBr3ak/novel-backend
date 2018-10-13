@@ -8,14 +8,20 @@
 
 <div class="field">
 	<div class="control">
-		<input bind:value=textValue id="text" class="input is-primary" type="text" placeholder="Primary input">
+    <input
+      bind:value=textValue
+      aria-label="Primary input"
+      id="text"
+      type="text"
+      class="input is-primary"
+      placeholder="Primary input" />
 	</div>
 </div>
 
 <div class="field">
 	<div class="control">
 		<div class="select is-primary">
-			<select bind:value=selected>
+			<select bind:value=selected aria-label="Choose Command">
 				{#each commandsMeta as option}
           <option value={option.value}>{option.label}</option>
 				{/each}
@@ -24,7 +30,12 @@
 	</div>
 </div>
 
-<button id="send" class="button is-primary" class:is-loading='actionPending' on:click='doCommand()'>Send</button>
+<button
+  aria-label="SubmitButton"
+  id="send"
+  class="button is-primary"
+  class:is-loading='actionPending'
+  on:click='doCommand()'>Send</button>
 
 {#each newUpdates as line}
   <p><a href={line.novelLink} class="has-text-success">{line.slug}</a></p>
